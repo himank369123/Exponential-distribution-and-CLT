@@ -1,0 +1,81 @@
+---
+title: "Central Limit Theorem Using Exponential Distribution"
+author: "Himank Jain"
+date: "March 17, 2019"
+output: pdf_document
+---
+
+
+```{r , include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview
+
+This analysis is to investigate the exponential distribution and compare it to Central Limit Theorem.The parameter are set to 0.2 for all the simulations. Here we compare the distribution of averages of 40 exponentials. 
+
+## Simulations
+
+* Initializing parameters.
+* Generating Distribution of averages of 40 exponentials for 1000 simulations.
+
+```{r, echo=TRUE}
+set.seed(369)
+lambda <- 0.2
+nexp <- 40
+
+average <- NULL
+for(i in 1:1000)
+    average <- c(average, mean(rexp(nexp, lambda)))
+
+```
+## Sample Mean VS Theoretical Mean 
+
+* Theoretical mean
+
+```{r}
+lambda ^ -1
+
+```
+
+* Sample mean:
+
+```{r}
+mean(average)
+
+```
+
+We observe Both means are approximately same.
+
+## Sample Variance versus Theoretical Variance
+* Theoretical variance:
+```{r}
+(lambda*sqrt(nexp))^-2
+
+```
+
+* Sample variance: 
+
+```{r}
+var(average)
+
+```
+
+We again observe that variances are approximately same with a very small difference.
+
+## Distributions:
+
+Density histogram of the $1000$ simulations with the normal distribution with mean $lambda ^ -1$ and variance of $(lambda*sqrt(nexp))^-2$ 
+```{r}
+library(ggplot2)
+g<-ggplot(data.frame(column = average), aes(x = column))
+g <- g + geom_histogram(aes(y = ..density..), binwidth = 0.3, fill = 'salmon', color = 'black')
+g <- g + stat_function(fun = dnorm, args = list(mean = lambda^-1, sd=(lambda*sqrt(nexp))^-1), size=1)
+g <- g + labs(title = "Exponentials Dist", x = "Simulation Means", y = "Density")
+g
+
+```
+
+# Conclusion:
+
+It can be observed that the normal density distribution drawn onto the density histograms fits perfectly and proves that the distribution of averages over a large sample of exponentials is normal distribution.
